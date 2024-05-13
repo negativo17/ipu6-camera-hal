@@ -1,5 +1,5 @@
-%global commit f073cb6f83222b235e66de2eb8e375b408bb9930
-%global date 20240411
+%global commit 289e645dffbd0ea633f10bb4f93855f1e4429e9a
+%global date 20240509
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 # We want to specify multiple separate build-dirs for the different variants
@@ -8,7 +8,7 @@
 Name:           ipu6-camera-hal
 Summary:        IPU6 Hardware Abstraction Layer
 Version:        0
-Release:        2.%{date}git%{shortcommit}%{?dist}
+Release:        3.%{date}git%{shortcommit}%{?dist}
 License:        Apache-2.0
 URL:            https://github.com/intel/ipu6-camera-hal
 ExclusiveArch:  x86_64
@@ -119,6 +119,9 @@ install -p -m 0644 -D %{SOURCE1} %{buildroot}%{_udevrulesdir}/60-intel-ipu6.rule
 %{_libdir}/pkgconfig/hal_adaptor.pc
 
 %changelog
+* Mon May 13 2024 Simone Caronni <negativo17@gmail.com> - 0-3.20240509git289e645
+- Update to latest snapshot.
+
 * Wed May 08 2024 Simone Caronni <negativo17@gmail.com> - 0-2.20240411gitf073cb6
 - Add LD configuration as ghost file.
 
