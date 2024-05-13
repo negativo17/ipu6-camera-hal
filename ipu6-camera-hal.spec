@@ -8,7 +8,7 @@
 Name:           ipu6-camera-hal
 Summary:        IPU6 Hardware Abstraction Layer
 Version:        0
-Release:        1.%{date}git%{shortcommit}%{?dist}
+Release:        2.%{date}git%{shortcommit}%{?dist}
 License:        Apache-2.0
 URL:            https://github.com/intel/ipu6-camera-hal
 ExclusiveArch:  x86_64
@@ -89,6 +89,7 @@ install -p -m 0644 -D %{SOURCE1} %{buildroot}%{_udevrulesdir}/60-intel-ipu6.rule
 
 %files
 %license LICENSE
+%ghost %config %{_sysconfdir}/ld.so.conf.d/ipu6-%{_target_cpu}.conf
 %dir %{_datadir}/camera
 %{_datadir}/camera/ipu_adl
 %{_datadir}/camera/ipu_mtl
@@ -118,5 +119,8 @@ install -p -m 0644 -D %{SOURCE1} %{buildroot}%{_udevrulesdir}/60-intel-ipu6.rule
 %{_libdir}/pkgconfig/hal_adaptor.pc
 
 %changelog
+* Wed May 08 2024 Simone Caronni <negativo17@gmail.com> - 0-2.20240411gitf073cb6
+- Add LD configuration as ghost file.
+
 * Mon May 06 2024 Simone Caronni <negativo17@gmail.com> - 0-1.20240416gitf073cb6
 - First build.
