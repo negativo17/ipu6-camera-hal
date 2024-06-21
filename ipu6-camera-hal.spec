@@ -8,7 +8,7 @@
 Name:           ipu6-camera-hal
 Summary:        IPU6 Hardware Abstraction Layer
 Version:        0
-Release:        3.%{date}git%{shortcommit}%{?dist}
+Release:        4.%{date}git%{shortcommit}%{?dist}
 License:        Apache-2.0
 URL:            https://github.com/intel/ipu6-camera-hal
 ExclusiveArch:  x86_64
@@ -28,10 +28,8 @@ BuildRequires:  systemd-rpm-macros
 
 Provides:       ipu6-driver = %{version}
 Provides:       ipu6-kmod-common = %{version}
-Provides:       ivsc-kmod-common = %{version}
 
 Requires:       ipu6-camera-bins%{?_isa}
-Requires:       ivsc-kmod
 Requires:       ipu6-kmod
 
 %description
@@ -119,6 +117,9 @@ install -p -m 0644 -D %{SOURCE1} %{buildroot}%{_udevrulesdir}/60-intel-ipu6.rule
 %{_libdir}/pkgconfig/hal_adaptor.pc
 
 %changelog
+* Fri Jun 21 2024 Simone Caronni <negativo17@gmail.com> - 0-4.20240509git289e645
+- VSC is part of the IPU6 kernel module package.
+
 * Mon May 13 2024 Simone Caronni <negativo17@gmail.com> - 0-3.20240509git289e645
 - Update to latest snapshot.
 
