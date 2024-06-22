@@ -8,7 +8,7 @@
 Name:           ipu6-camera-hal
 Summary:        IPU6 Hardware Abstraction Layer
 Version:        0
-Release:        4.%{date}git%{shortcommit}%{?dist}
+Release:        5.%{date}git%{shortcommit}%{?dist}
 License:        Apache-2.0
 URL:            https://github.com/intel/ipu6-camera-hal
 ExclusiveArch:  x86_64
@@ -95,28 +95,31 @@ install -p -m 0644 -D %{SOURCE1} %{buildroot}%{_udevrulesdir}/60-intel-ipu6.rule
 %{_libdir}/ipu_adl/libcamhal.so.0.0.0
 %{_libdir}/ipu_adl/libcamhal.so.0
 %{_libdir}/ipu_adl/libcamhal.so
-%{_libdir}/ipu_adl/pkgconfig/libcamhal.pc
 %{_libdir}/ipu_mtl/libcamhal.so.0.0.0
 %{_libdir}/ipu_mtl/libcamhal.so.0
 %{_libdir}/ipu_mtl/libcamhal.so
-%{_libdir}/ipu_mtl/pkgconfig/libcamhal.pc
 %{_libdir}/ipu_tgl/libcamhal.so.0.0.0
 %{_libdir}/ipu_tgl/libcamhal.so.0
 %{_libdir}/ipu_tgl/libcamhal.so
-%{_libdir}/ipu_tgl/pkgconfig/libcamhal.pc
 %{_libdir}/libhal_adaptor.so.0.0.0
 %{_libdir}/libhal_adaptor.so.0
+%{_libdir}/libhal_adaptor.so
 %{_udevrulesdir}/60-intel-ipu6.rules
 
 %files devel
 %{_includedir}/hal_adaptor
 %{_libdir}/ipu_adl/libcamhal.a
+%{_libdir}/ipu_adl/pkgconfig/libcamhal.pc
 %{_libdir}/ipu_mtl/libcamhal.a
+%{_libdir}/ipu_mtl/pkgconfig/libcamhal.pc
 %{_libdir}/ipu_tgl/libcamhal.a
-%{_libdir}/libhal_adaptor.so
+%{_libdir}/ipu_tgl/pkgconfig/libcamhal.pc
 %{_libdir}/pkgconfig/hal_adaptor.pc
 
 %changelog
+* Sat Jun 22 2024 Simone Caronni <negativo17@gmail.com> - 0-5.20240509git289e645
+- Adjust file lists.
+
 * Fri Jun 21 2024 Simone Caronni <negativo17@gmail.com> - 0-4.20240509git289e645
 - VSC is part of the IPU6 kernel module package.
 
