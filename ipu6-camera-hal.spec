@@ -8,14 +8,16 @@
 Name:           ipu6-camera-hal
 Summary:        IPU6 Hardware Abstraction Layer
 Version:        0
-Release:        5.%{date}git%{shortcommit}%{?dist}
+Release:        6.%{date}git%{shortcommit}%{?dist}
 License:        Apache-2.0
 URL:            https://github.com/intel/ipu6-camera-hal
 ExclusiveArch:  x86_64
 
 Source0:        https://github.com/intel/%{name}/archive/%{commit}/%{name}-%{shortcommit}.tar.gz
 Source1:        60-intel-ipu6.rules
-Patch0:         %{name}-path.patch
+Patch0:         https://github.com/intel/ipu6-camera-hal/pull/114.patch
+Patch1:         https://github.com/intel/ipu6-camera-hal/pull/113.patch
+Patch2:         %{name}-path.patch
 
 BuildRequires:  cmake
 BuildRequires:  expat-devel
@@ -80,6 +82,8 @@ popd
 for target in ipu_tgl ipu_adl ipu_mtl hal_adaptor; do
   pushd $target
     %cmake_install
+    rm -f %{buildroot}%{_libdir}/$target/libcamhal.a
+    rm -fr %{buildroot}%{_libdir}/$target/pkgconfig
   popd
 done
 
@@ -103,20 +107,19 @@ install -p -m 0644 -D %{SOURCE1} %{buildroot}%{_udevrulesdir}/60-intel-ipu6.rule
 %{_libdir}/ipu_tgl/libcamhal.so
 %{_libdir}/libhal_adaptor.so.0.0.0
 %{_libdir}/libhal_adaptor.so.0
-%{_libdir}/libhal_adaptor.so
 %{_udevrulesdir}/60-intel-ipu6.rules
 
 %files devel
 %{_includedir}/hal_adaptor
-%{_libdir}/ipu_adl/libcamhal.a
-%{_libdir}/ipu_adl/pkgconfig/libcamhal.pc
-%{_libdir}/ipu_mtl/libcamhal.a
-%{_libdir}/ipu_mtl/pkgconfig/libcamhal.pc
-%{_libdir}/ipu_tgl/libcamhal.a
-%{_libdir}/ipu_tgl/pkgconfig/libcamhal.pc
+%{_libdir}/libhal_adaptor.so
 %{_libdir}/pkgconfig/hal_adaptor.pc
 
 %changelog
+* Thu Jul 04 2024 Simone Caronni <negativo17@gmail.com> - 0-6.20240509git289e645
+- Add new patches.
+- Adjust devel subpackage.
+- Add PCI ID for Meteor Lake.
+
 * Sat Jun 22 2024 Simone Caronni <negativo17@gmail.com> - 0-5.20240509git289e645
 - Adjust file lists.
 
