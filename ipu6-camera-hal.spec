@@ -1,5 +1,5 @@
-%global commit 289e645dffbd0ea633f10bb4f93855f1e4429e9a
-%global date 20240509
+%global commit 8863bda8b15bef415f112700d0fb04e00a48dbee
+%global date 20240719
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 # We want to specify multiple separate build-dirs for the different variants
@@ -8,16 +8,15 @@
 Name:           ipu6-camera-hal
 Summary:        IPU6 Hardware Abstraction Layer
 Version:        0
-Release:        6.%{date}git%{shortcommit}%{?dist}
+Release:        7.%{date}git%{shortcommit}%{?dist}
 License:        Apache-2.0
 URL:            https://github.com/intel/ipu6-camera-hal
 ExclusiveArch:  x86_64
 
 Source0:        https://github.com/intel/%{name}/archive/%{commit}/%{name}-%{shortcommit}.tar.gz
 Source1:        60-intel-ipu6.rules
-Patch0:         https://github.com/intel/ipu6-camera-hal/pull/114.patch
-Patch1:         https://github.com/intel/ipu6-camera-hal/pull/113.patch
-Patch2:         %{name}-path.patch
+Patch0:         https://github.com/intel/ipu6-camera-hal/pull/113.patch
+Patch1:         %{name}-path.patch
 
 BuildRequires:  cmake
 BuildRequires:  expat-devel
@@ -115,6 +114,9 @@ install -p -m 0644 -D %{SOURCE1} %{buildroot}%{_udevrulesdir}/60-intel-ipu6.rule
 %{_libdir}/pkgconfig/hal_adaptor.pc
 
 %changelog
+* Tue Aug 06 2024 Simone Caronni <negativo17@gmail.com> - 0-7.20240719git8863bda
+- Update to latest snapshot.
+
 * Thu Jul 04 2024 Simone Caronni <negativo17@gmail.com> - 0-6.20240509git289e645
 - Add new patches.
 - Adjust devel subpackage.
