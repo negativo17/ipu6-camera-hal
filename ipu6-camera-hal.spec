@@ -15,7 +15,8 @@ ExclusiveArch:  x86_64
 
 Source0:        https://github.com/intel/%{name}/archive/%{commit}/%{name}-%{shortcommit}.tar.gz
 Source1:        60-intel-ipu6.rules
-Patch0:         https://github.com/intel/ipu6-camera-hal/pull/113.patch
+# https://github.com/intel/ipu6-camera-hal/pull/113
+Patch0:         113.patch
 Patch1:         %{name}-path.patch
 
 BuildRequires:  cmake

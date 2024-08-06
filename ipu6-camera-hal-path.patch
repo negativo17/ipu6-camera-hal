@@ -1,6 +1,6 @@
-diff -Naur --color ipu6-camera-hal-f073cb6f83222b235e66de2eb8e375b408bb9930.old/cmake/libcamhal.pc.cmakein ipu6-camera-hal-f073cb6f83222b235e66de2eb8e375b408bb9930/cmake/libcamhal.pc.cmakein
---- ipu6-camera-hal-f073cb6f83222b235e66de2eb8e375b408bb9930.old/cmake/libcamhal.pc.cmakein	2024-05-07 11:53:20.176492873 +0200
-+++ ipu6-camera-hal-f073cb6f83222b235e66de2eb8e375b408bb9930/cmake/libcamhal.pc.cmakein	2024-05-07 11:53:45.735587245 +0200
+diff -Naur ipu6-camera-hal-8863bda8b15bef415f112700d0fb04e00a48dbee.old/cmake/libcamhal.pc.cmakein ipu6-camera-hal-8863bda8b15bef415f112700d0fb04e00a48dbee/cmake/libcamhal.pc.cmakein
+--- ipu6-camera-hal-8863bda8b15bef415f112700d0fb04e00a48dbee.old/cmake/libcamhal.pc.cmakein	2024-08-06 08:24:01.897232057 +0200
++++ ipu6-camera-hal-8863bda8b15bef415f112700d0fb04e00a48dbee/cmake/libcamhal.pc.cmakein	2024-08-06 08:25:08.361731743 +0200
 @@ -1,6 +1,6 @@
  prefix=@CMAKE_INSTALL_PREFIX@
  exec_prefix=${prefix}/@CMAKE_INSTALL_SUB_PATH@
@@ -9,21 +9,21 @@ diff -Naur --color ipu6-camera-hal-f073cb6f83222b235e66de2eb8e375b408bb9930.old/
  includedir=${prefix}/include/@CMAKE_INSTALL_SUB_PATH@/libcamhal
  
  Name: libcamhal
-diff -Naur --color ipu6-camera-hal-f073cb6f83222b235e66de2eb8e375b408bb9930.old/src/hal/hal_adaptor/HalAdaptor.cpp ipu6-camera-hal-f073cb6f83222b235e66de2eb8e375b408bb9930/src/hal/hal_adaptor/HalAdaptor.cpp
---- ipu6-camera-hal-f073cb6f83222b235e66de2eb8e375b408bb9930.old/src/hal/hal_adaptor/HalAdaptor.cpp	2024-05-07 11:53:20.197492951 +0200
-+++ ipu6-camera-hal-f073cb6f83222b235e66de2eb8e375b408bb9930/src/hal/hal_adaptor/HalAdaptor.cpp	2024-05-07 14:18:42.843691976 +0200
-@@ -62,7 +62,7 @@
-     CheckAndLogError((strlen(pciID) == 0), VOID_VALUE, "%s, Failed to read PCI id. %d", __func__,
-                      ret);
+diff -Naur ipu6-camera-hal-8863bda8b15bef415f112700d0fb04e00a48dbee.old/src/hal/hal_adaptor/HalAdaptor.cpp ipu6-camera-hal-8863bda8b15bef415f112700d0fb04e00a48dbee/src/hal/hal_adaptor/HalAdaptor.cpp
+--- ipu6-camera-hal-8863bda8b15bef415f112700d0fb04e00a48dbee.old/src/hal/hal_adaptor/HalAdaptor.cpp	2024-08-06 08:24:01.916232200 +0200
++++ ipu6-camera-hal-8863bda8b15bef415f112700d0fb04e00a48dbee/src/hal/hal_adaptor/HalAdaptor.cpp	2024-08-06 08:25:45.699012448 +0200
+@@ -107,7 +107,7 @@
+     CheckAndLogError(!(hasIpu6Info || hasIpu7Info), VOID_VALUE,
+                      "%s, failed to open PCI device. error: %s", __func__, dlerror());
  
 -    std::string libName = "/usr/lib/";
 +    std::string libName = "/usr/lib64/";
-     if (IPU6_UPSTREAM) {
-         if (strstr(pciID, "0x7d19") != nullptr /* MTL */) {
-             libName += "ipu_mtl_upstream";
-diff -Naur --color ipu6-camera-hal-f073cb6f83222b235e66de2eb8e375b408bb9930.old/src/platformdata/PlatformData.h ipu6-camera-hal-f073cb6f83222b235e66de2eb8e375b408bb9930/src/platformdata/PlatformData.h
---- ipu6-camera-hal-f073cb6f83222b235e66de2eb8e375b408bb9930.old/src/platformdata/PlatformData.h	2024-05-07 11:53:20.199492958 +0200
-+++ ipu6-camera-hal-f073cb6f83222b235e66de2eb8e375b408bb9930/src/platformdata/PlatformData.h	2024-05-07 19:33:11.713149442 +0200
+     if (strstr(gPciId, "0xa75d") != nullptr /* RPL */ ||
+         strstr(gPciId, "0x462e") != nullptr /* ADLN */ ||
+         strstr(gPciId, "0x465d") != nullptr /* ADLP */) {
+diff -Naur ipu6-camera-hal-8863bda8b15bef415f112700d0fb04e00a48dbee.old/src/platformdata/PlatformData.h ipu6-camera-hal-8863bda8b15bef415f112700d0fb04e00a48dbee/src/platformdata/PlatformData.h
+--- ipu6-camera-hal-8863bda8b15bef415f112700d0fb04e00a48dbee.old/src/platformdata/PlatformData.h	2024-08-06 08:24:01.919232222 +0200
++++ ipu6-camera-hal-8863bda8b15bef415f112700d0fb04e00a48dbee/src/platformdata/PlatformData.h	2024-08-06 08:25:08.362731750 +0200
 @@ -89,7 +89,7 @@
  #define MAX_CAMERA_NUMBER 100
  // Temporarily using current path to save aiqd file for none CAL platforms.
