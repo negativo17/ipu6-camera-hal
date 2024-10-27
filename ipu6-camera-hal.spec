@@ -1,23 +1,16 @@
-%global commit 8863bda8b15bef415f112700d0fb04e00a48dbee
-%global date 20240719
+%global commit a2de9c2a4d1d1be5d6493350c8860810f7568352
+%global date 20241012
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
-
-# We want to specify multiple separate build-dirs for the different variants
-%global __cmake_in_source_build 1
 
 Name:           ipu6-camera-hal
 Summary:        IPU6 Hardware Abstraction Layer
 Version:        0
-Release:        7.%{date}git%{shortcommit}%{?dist}
+Release:        8.%{date}git%{shortcommit}%{?dist}
 License:        Apache-2.0
 URL:            https://github.com/intel/ipu6-camera-hal
 ExclusiveArch:  x86_64
 
 Source0:        https://github.com/intel/%{name}/archive/%{commit}/%{name}-%{shortcommit}.tar.gz
-Source1:        60-intel-ipu6.rules
-# https://github.com/intel/ipu6-camera-hal/pull/113
-Patch0:         113.patch
-Patch1:         %{name}-path.patch
 
 BuildRequires:  cmake
 BuildRequires:  expat-devel
@@ -50,71 +43,36 @@ This provides the necessary header files for IPU6 HAL development.
 %autosetup -p1 -n %{name}-%{commit}
 
 %build
-for target in ipu_tgl ipu_adl ipu_mtl; do
-  export PKG_CONFIG_PATH=%{_libdir}/$target/pkgconfig/
-  mkdir $target
-  pushd $target
-    [[ "$target" = "ipu_tgl" ]] && IPU_VERSION=ipu6
-    [[ "$target" = "ipu_adl" ]] && IPU_VERSION=ipu6ep
-    [[ "$target" = "ipu_mtl" ]] && IPU_VERSION=ipu6epmtl
-    sed -i -e "s|CAMERA_DEFAULT_CFG_PATH.*|CAMERA_DEFAULT_CFG_PATH \"%{_datadir}/camera/\"|g" \
-      ../src/platformdata/PlatformData.h
-    %cmake \
-      -DBUILD_CAMHAL_TESTS=OFF \
-      -DCMAKE_BUILD_TYPE=Release \
-      -DCMAKE_INSTALL_SUB_PATH=$target \
-      -DCMAKE_INSTALL_SYSCONFDIR=%{_datadir} \
-      -DIPU_VER=$IPU_VERSION \
-      -DUSE_PG_LITE_PIPE=ON \
-      ..
-    %cmake_build
-  popd
-done
+%cmake \
+  -DBUILD_CAMHAL_ADAPTOR=ON \
+  -DBUILD_CAMHAL_PLUGIN=ON \
+  -DBUILD_CAMHAL_TESTS=OFF \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_INSTALL_SYSCONFDIR=%{_datadir} \
+  -DIPU_VERSIONS="ipu6;ipu6ep;ipu6epmtl" \
+  -DUSE_PG_LITE_PIPE=ON
 
-mkdir hal_adaptor
-pushd hal_adaptor
-  export PKG_CONFIG_PATH=%{_libdir}/pkgconfig/
-  %cmake ../src/hal/hal_adaptor
-  %cmake_build
-popd
+%cmake_build
 
 %install
-for target in ipu_tgl ipu_adl ipu_mtl hal_adaptor; do
-  pushd $target
-    %cmake_install
-    rm -f %{buildroot}%{_libdir}/$target/libcamhal.a
-    rm -fr %{buildroot}%{_libdir}/$target/pkgconfig
-  popd
-done
-
-install -p -m 0644 -D %{SOURCE1} %{buildroot}%{_udevrulesdir}/60-intel-ipu6.rules
+%cmake_install
 
 %files
 %license LICENSE
-%ghost %config %{_sysconfdir}/ld.so.conf.d/ipu6-%{_target_cpu}.conf
-%dir %{_datadir}/camera
-%{_datadir}/camera/ipu_adl
-%{_datadir}/camera/ipu_mtl
-%{_datadir}/camera/ipu_tgl
-%{_libdir}/ipu_adl/libcamhal.so.0.0.0
-%{_libdir}/ipu_adl/libcamhal.so.0
-%{_libdir}/ipu_adl/libcamhal.so
-%{_libdir}/ipu_mtl/libcamhal.so.0.0.0
-%{_libdir}/ipu_mtl/libcamhal.so.0
-%{_libdir}/ipu_mtl/libcamhal.so
-%{_libdir}/ipu_tgl/libcamhal.so.0.0.0
-%{_libdir}/ipu_tgl/libcamhal.so.0
-%{_libdir}/ipu_tgl/libcamhal.so
-%{_libdir}/libhal_adaptor.so.0.0.0
-%{_libdir}/libhal_adaptor.so.0
-%{_udevrulesdir}/60-intel-ipu6.rules
+%{_datadir}/camera/
+%{_libdir}/libcamhal.so.0.0.0
+%{_libdir}/libcamhal.so.0
+%{_libdir}/libcamhal/
 
 %files devel
-%{_includedir}/hal_adaptor
-%{_libdir}/libhal_adaptor.so
-%{_libdir}/pkgconfig/hal_adaptor.pc
+%{_includedir}/libcamhal/
+%{_libdir}/libcamhal.so
+%{_libdir}/pkgconfig/libcamhal.pc
 
 %changelog
+* Sun Oct 27 2024 Simone Caronni <negativo17@gmail.com> - 0-8.20241012gita2de9c2
+- Update to latest snapshot. Unified build.
+
 * Tue Aug 06 2024 Simone Caronni <negativo17@gmail.com> - 0-7.20240719git8863bda
 - Update to latest snapshot.
 
