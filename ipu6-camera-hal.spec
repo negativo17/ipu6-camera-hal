@@ -21,11 +21,9 @@ BuildRequires:  kernel-headers
 BuildRequires:  libdrm-devel
 BuildRequires:  systemd-rpm-macros
 
-Provides:       ipu6-driver = %{version}
 Provides:       ipu6-kmod-common = %{version}
 
 Requires:       ipu6-camera-bins%{?_isa}
-Requires:       ipu6-kmod
 
 %description
 IPU6 Hardware Abstraction Layer. It supports MIPI cameras through the IPU6 on
