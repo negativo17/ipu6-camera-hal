@@ -1,11 +1,11 @@
-%global commit 7527bcc0a078fb5a8ea4da9eabf7866ddfb0da3d
-%global date 20241115
+%global commit c933525a6efe8229a7129b7b0b66798f19d2bef7
+%global date 20250627
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 Name:           ipu6-camera-hal
 Summary:        IPU6 Hardware Abstraction Layer
 Version:        0
-Release:        9.%{date}git%{shortcommit}%{?dist}
+Release:        10.%{date}git%{shortcommit}%{?dist}
 License:        Apache-2.0
 URL:            https://github.com/intel/ipu6-camera-hal
 ExclusiveArch:  x86_64
@@ -41,6 +41,7 @@ This provides the necessary header files for IPU6 HAL development.
 %autosetup -p1 -n %{name}-%{commit}
 
 %build
+export CXXFLAGS="%{optflags} -Wno-error=alloc-size-larger-than=9223372036854775807"
 %cmake \
   -DBUILD_CAMHAL_ADAPTOR=ON \
   -DBUILD_CAMHAL_PLUGIN=ON \
@@ -68,6 +69,9 @@ This provides the necessary header files for IPU6 HAL development.
 %{_libdir}/pkgconfig/libcamhal.pc
 
 %changelog
+* Fri Jun 27 2025 Simone Caronni <negativo17@gmail.com> - 0-10.20250627gitc933525
+- Update to latest snapshot.
+
 * Mon Nov 25 2024 Simone Caronni <negativo17@gmail.com> - 0-9.20241115git7527bcc
 - Update to latest snapshot.
 
