@@ -5,12 +5,13 @@
 Name:           ipu6-camera-hal
 Summary:        IPU6 Hardware Abstraction Layer
 Version:        0^%{date}git%{shortcommit}
-Release:        11%{?dist}
+Release:        12%{?dist}
 License:        Apache-2.0
 URL:            https://github.com/intel/ipu6-camera-hal
 ExclusiveArch:  x86_64
 
 Source0:        https://github.com/intel/%{name}/archive/%{commit}/%{name}-%{shortcommit}.tar.gz
+Source1:        72-ipu6-psys.rules
 
 BuildRequires:  cmake
 BuildRequires:  expat-devel
@@ -57,6 +58,7 @@ export CXXFLAGS="%{optflags} -Wno-error=alloc-size-larger-than=92233720368547758
 
 %install
 %cmake_install
+install -p -m 0644 -D %{SOURCE1} %{buildroot}%{_udevrulesdir}/72-ipu6-psys.rules
 
 %files
 %license LICENSE
@@ -64,6 +66,7 @@ export CXXFLAGS="%{optflags} -Wno-error=alloc-size-larger-than=92233720368547758
 %{_libdir}/libcamhal.so.0.0.0
 %{_libdir}/libcamhal.so.0
 %{_libdir}/libcamhal/
+%{_udevrulesdir}/72-ipu6-psys.rules
 
 %files devel
 %{_includedir}/libcamhal/
@@ -71,6 +74,9 @@ export CXXFLAGS="%{optflags} -Wno-error=alloc-size-larger-than=92233720368547758
 %{_libdir}/pkgconfig/libcamhal.pc
 
 %changelog
+* Mon Jul 06 2026 Simone Caronni <negativo17@gmail.com> - 0^20260120git9899efa-12
+- Add udev rule for intel-ipu6-psys device.
+
 * Mon Jul 06 2026 Simone Caronni <negativo17@gmail.com> - 0^20260120git9899efa-11
 - Update to latest snapshot.
 - Use proper snapshot format.
