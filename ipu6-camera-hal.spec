@@ -1,11 +1,11 @@
-%global commit c933525a6efe8229a7129b7b0b66798f19d2bef7
-%global date 20250627
+%global commit 9899efa70921906ee6dd23c9f83aff343968f164
+%global date 20260120
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 Name:           ipu6-camera-hal
 Summary:        IPU6 Hardware Abstraction Layer
-Version:        0
-Release:        10.%{date}git%{shortcommit}%{?dist}
+Version:        0^%{date}git%{shortcommit}
+Release:        11%{?dist}
 License:        Apache-2.0
 URL:            https://github.com/intel/ipu6-camera-hal
 ExclusiveArch:  x86_64
@@ -41,13 +41,15 @@ This provides the necessary header files for IPU6 HAL development.
 %autosetup -p1 -n %{name}-%{commit}
 
 %build
-export CXXFLAGS="%{optflags} -Wno-error=alloc-size-larger-than=9223372036854775807"
+export CFLAGS="%{optflags} -Wno-error=unused-but-set-variable"
+export CXXFLAGS="%{optflags} -Wno-error=alloc-size-larger-than=9223372036854775807 -Wno-error=unused-but-set-variable"
 %cmake \
   -DBUILD_CAMHAL_ADAPTOR=ON \
   -DBUILD_CAMHAL_PLUGIN=ON \
   -DBUILD_CAMHAL_TESTS=OFF \
   -DCMAKE_BUILD_TYPE=Release \
   -DCMAKE_INSTALL_SYSCONFDIR=%{_datadir} \
+  -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
   -DIPU_VERSIONS="ipu6;ipu6ep;ipu6epmtl" \
   -DUSE_PG_LITE_PIPE=ON
 
@@ -69,6 +71,10 @@ export CXXFLAGS="%{optflags} -Wno-error=alloc-size-larger-than=92233720368547758
 %{_libdir}/pkgconfig/libcamhal.pc
 
 %changelog
+* Mon Jul 06 2026 Simone Caronni <negativo17@gmail.com> - 0^20260120git9899efa-11
+- Update to latest snapshot.
+- Use proper snapshot format.
+
 * Fri Jun 27 2025 Simone Caronni <negativo17@gmail.com> - 0-10.20250627gitc933525
 - Update to latest snapshot.
 
