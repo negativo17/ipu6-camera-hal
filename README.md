@@ -4,6 +4,16 @@ Using the Intel IPU6 MIPI camera (e.g. OV02C10 sensor) via the `icamerasrc` GStr
 
 Tested on a Raptor Lake platform (Core i7-13800H, IPU6 PCI `8086:a75d`, `ipu6ep` config set) with the `ov02c10` sensor and the out-of-tree IPU6 kernel modules (`intel_ipu6`, `intel_ipu6_isys`, `intel_ipu6_psys`).
 
+On this particular laptop, these are the components required to get a full working setup:
+
+- Platform: Raptor Lake i7‑13800H, IPU6 PCI 8086:a75d, uses the `ipu6ep` config set
+- Sensor: ov02c10 19-0036 bound to CSI2 port 3 (`[ENABLED,IMMUTABLE]`)
+- HAL config: `/usr/share/camera/ipu6ep/` present, incl. `OV02C10_*.aiqb` + `ov02c10-uf.xml`
+- Firmware: `ipu6ep_fw.bin` present
+- Plugin: `libgsticamerasrc.so`, camera device-name `ov02c10-uf`
+- ISYS nodes: `/dev/video*`, `/dev/media2` with `uaccess` ACL for your session
+- PSYS node: `/dev/ipu-psys0` with `uaccess` ACL for your session
+
 ## Prerequisites
 
 Install the IPU6 stack:
