@@ -12,6 +12,7 @@ ExclusiveArch:  x86_64
 
 Source0:        https://github.com/intel/%{name}/archive/%{commit}/%{name}-%{shortcommit}.tar.gz
 Source1:        72-ipu6-psys.rules
+Source2:        ipu6-camera-hal.conf
 
 BuildRequires:  cmake
 BuildRequires:  expat-devel
@@ -58,7 +59,12 @@ export CXXFLAGS="%{optflags} -Wno-error=alloc-size-larger-than=92233720368547758
 
 %install
 %cmake_install
+
 install -p -m 0644 -D %{SOURCE1} %{buildroot}%{_udevrulesdir}/72-ipu6-psys.rules
+install -p -m 0644 -D %{SOURCE2} %{buildroot}%{_tmpfilesdir}/%{name}.conf
+
+%post
+%tmpfiles_create %{_tmpfilesdir}/%{name}.conf
 
 %files
 %license LICENSE
@@ -66,6 +72,7 @@ install -p -m 0644 -D %{SOURCE1} %{buildroot}%{_udevrulesdir}/72-ipu6-psys.rules
 %{_libdir}/libcamhal.so.0.0.0
 %{_libdir}/libcamhal.so.0
 %{_libdir}/libcamhal/
+%{_tmpfilesdir}/%{name}.conf
 %{_udevrulesdir}/72-ipu6-psys.rules
 
 %files devel
