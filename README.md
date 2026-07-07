@@ -107,6 +107,35 @@ There is usually a single camera (the default). To pick one explicitly:
 gst-launch-1.0 icamerasrc device-name=ov02c10-uf ! ...
 ```
 
+## Use as a standard webcam (v4l2loopback)
+
+`icamerasrc` is a native GStreamer source and does **not** create a `/dev/videoN` node, so apps expecting a plain webcam (browsers, conferencing apps, `v4l2src`) cannot use it directly. Bridge it through `v4l2loopback`: a GStreamer pipeline pumps the camera into a loopback device that appears as an ordinary V4L2 webcam.
+
+This is what Chrome expects without turning on Pipewire support.
+
+Because the bridge holds the sensor open while it runs, it must be started **on-demand** when you need the webcam,
+
+### Manual bridge
+
+Create a loopback device and feed it:
+
+```bash
+sudo modprobe v4l2loopback devices=1 video_nr=42 card_label="IPU6 Camera" exclusive_caps=1
+
+gst-launch-1.0 -e icamerasrc ! \
+  "video/x-raw(memory:DMABuf),format=DMA_DRM,width=1280,height=720" ! \
+  glupload ! glcolorconvert ! gldownload ! "video/x-raw,format=NV12" ! \
+  videoconvert ! "video/x-raw,format=YUY2" ! \
+  v4l2sink device=/dev/video42
+```
+
+`exclusive_caps=1` is required for most apps (Chrome, Firefox, Zoom) to list the node as a capture device. `YUY2` is the format most apps expect. Point any app at **"IPU6 Camera"** (`/dev/video42`); verify with:
+
+```bash
+gst-launch-1.0 v4l2src device=/dev/video42 ! videoconvert ! autovideosink
+```
+
+
 ## Notes
 
 - `icamerasrc` is a native GStreamer source and does **not** create a `/dev/videoN` V4L2 node. Apps expecting a plain webcam (browsers, conferencing apps, `v4l2src`) will not see it directly; bridge it through `v4l2loopback` if needed.
