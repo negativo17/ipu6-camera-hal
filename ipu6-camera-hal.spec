@@ -5,7 +5,7 @@
 Name:           ipu6-camera-hal
 Summary:        IPU6 Hardware Abstraction Layer
 Version:        0^%{date}git%{shortcommit}
-Release:        12%{?dist}
+Release:        13%{?dist}
 License:        Apache-2.0
 URL:            https://github.com/intel/ipu6-camera-hal
 ExclusiveArch:  x86_64
@@ -23,9 +23,11 @@ BuildRequires:  kernel-headers
 BuildRequires:  libdrm-devel
 BuildRequires:  systemd-rpm-macros
 
-Provides:       ipu6-kmod-common = %{version}
+# Components do not have matching snapshots, so just use something to satisfy dependencies:
+Provides:       ipu6-kmod-common = 1
 
 Requires:       ipu6-camera-bins%{?_isa}
+Requires:       ipu6-kmod
 
 %description
 IPU6 Hardware Abstraction Layer. It supports MIPI cameras through the IPU6 on
@@ -81,6 +83,9 @@ install -p -m 0644 -D %{SOURCE2} %{buildroot}%{_tmpfilesdir}/%{name}.conf
 %{_libdir}/pkgconfig/libcamhal.pc
 
 %changelog
+* Tue Jul 07 2026 Simone Caronni <negativo17@gmail.com> - 0^20260120git9899efa-13
+- Adjust dependencies.
+
 * Mon Jul 06 2026 Simone Caronni <negativo17@gmail.com> - 0^20260120git9899efa-12
 - Add udev rule for intel-ipu6-psys device.
 
