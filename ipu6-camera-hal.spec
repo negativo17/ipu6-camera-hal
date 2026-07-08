@@ -5,7 +5,7 @@
 Name:           ipu6-camera-hal
 Summary:        IPU6 Hardware Abstraction Layer
 Version:        0^%{date}git%{shortcommit}
-Release:        14%{?dist}
+Release:        15%{?dist}
 License:        Apache-2.0
 URL:            https://github.com/intel/ipu6-camera-hal
 ExclusiveArch:  x86_64
@@ -60,11 +60,15 @@ install -p -m 0644 -D %{SOURCE1} %{buildroot}%{_udevrulesdir}/72-ipu6-psys.rules
 
 %files
 %license LICENSE
+%doc README.md SECURITY.md
 %{_datadir}/camera/
 %{_libdir}/libcamhal/
 %{_udevrulesdir}/72-ipu6-psys.rules
 
 %changelog
+* Wed Jul 08 2026 Simone Caronni <negativo17@gmail.com> - 0^20260120git9899efa-15
+- Add docs.
+
 * Wed Jul 08 2026 Simone Caronni <negativo17@gmail.com> - 0^20260120git9899efa-14
 - Build only the IPU6 HAL plugins; the libcamhal adaptor and headers are now
   provided by the shared libcamhal / libcamhal-devel packages built from
