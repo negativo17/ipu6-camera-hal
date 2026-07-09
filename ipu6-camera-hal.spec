@@ -5,7 +5,7 @@
 Name:           ipu6-camera-hal
 Summary:        IPU6 Hardware Abstraction Layer
 Version:        0^%{date}git%{shortcommit}
-Release:        15%{?dist}
+Release:        16%{?dist}
 License:        Apache-2.0
 URL:            https://github.com/intel/ipu6-camera-hal
 ExclusiveArch:  x86_64
@@ -58,14 +58,23 @@ export CXXFLAGS="%{optflags} -Wno-error=alloc-size-larger-than=92233720368547758
 
 install -p -m 0644 -D %{SOURCE1} %{buildroot}%{_udevrulesdir}/72-ipu6-psys.rules
 
+# Load the PSYS module at boot so /dev/ipu-psys0 is available (it does not
+# auto-load):
+install -d %{buildroot}%{_modulesloaddir}
+echo intel-ipu6-psys > %{buildroot}%{_modulesloaddir}/ipu6-psys.conf
+
 %files
 %license LICENSE
 %doc README.md SECURITY.md
 %{_datadir}/camera/
 %{_libdir}/libcamhal/
+%{_modulesloaddir}/ipu6-psys.conf
 %{_udevrulesdir}/72-ipu6-psys.rules
 
 %changelog
+* Thu Jul 09 2026 Simone Caronni <negativo17@gmail.com> - 0^20260120git9899efa-16
+- Load the intel-ipu6-psys module at boot through modules-load.d.
+
 * Wed Jul 08 2026 Simone Caronni <negativo17@gmail.com> - 0^20260120git9899efa-15
 - Add docs.
 
