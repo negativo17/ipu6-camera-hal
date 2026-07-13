@@ -5,7 +5,7 @@
 Name:           ipu6-camera-hal
 Summary:        IPU6 Hardware Abstraction Layer
 Version:        0^%{date}git%{shortcommit}
-Release:        17%{?dist}
+Release:        18%{?dist}
 License:        Apache-2.0
 URL:            https://github.com/intel/ipu6-camera-hal
 ExclusiveArch:  x86_64
@@ -68,11 +68,11 @@ echo intel-ipu6-psys > %{buildroot}%{_modulesloaddir}/ipu6-psys.conf
 # Filter out raw v4l2 devices (not usable) from the list of available cameras in Pipewire:
 install -p -m 0644 -D %{SOURCE2} %{buildroot}%{_datadir}/wireplumber/wireplumber.conf.d/50-ipu6-hide-raw-v4l2.conf
 
-%post
-%systemd_user_post wireplumber.service
-
-%postun
-%systemd_user_postun_with_restart wireplumber.service
+%posttrans
+if [ -x /usr/lib/systemd/systemd-update-helper ]; then
+    /usr/lib/systemd/systemd-update-helper mark-restart-user-units wireplumber.service || :
+    /usr/lib/systemd/systemd-update-helper user-restart || :
+fi
 
 %files
 %license LICENSE
@@ -84,6 +84,9 @@ install -p -m 0644 -D %{SOURCE2} %{buildroot}%{_datadir}/wireplumber/wireplumber
 %{_datadir}/wireplumber/wireplumber.conf.d/50-ipu6-hide-raw-v4l2.conf
 
 %changelog
+* Mon Jul 13 2026 Simone Caronni <negativo17@gmail.com> - 0^20260120git9899efa-18
+- Try with posttrans for restarting user's systemd units.
+
 * Mon Jul 13 2026 Simone Caronni <negativo17@gmail.com> - 0^20260120git9899efa-17
 - Add wireplumber configuration to hide raw v4l2 devices.
 
