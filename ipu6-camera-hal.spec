@@ -5,13 +5,14 @@
 Name:           ipu6-camera-hal
 Summary:        IPU6 Hardware Abstraction Layer
 Version:        0^%{date}git%{shortcommit}
-Release:        16%{?dist}
+Release:        17%{?dist}
 License:        Apache-2.0
 URL:            https://github.com/intel/ipu6-camera-hal
 ExclusiveArch:  x86_64
 
 Source0:        https://github.com/intel/%{name}/archive/%{commit}/%{name}-%{shortcommit}.tar.gz
 Source1:        72-ipu6-psys.rules
+Source2:        50-ipu6-hide-raw-v4l2.conf
 
 BuildRequires:  cmake
 BuildRequires:  expat-devel
@@ -28,6 +29,7 @@ Provides:       ipu6-kmod-common = 1
 Requires:       ipu6-camera-bins%{?_isa}
 Requires:       ipu6-kmod
 Requires:       libcamhal%{?_isa}
+Requires:       wireplumber
 
 %description
 IPU6 Hardware Abstraction Layer plugins. They support MIPI cameras through the
@@ -63,6 +65,15 @@ install -p -m 0644 -D %{SOURCE1} %{buildroot}%{_udevrulesdir}/72-ipu6-psys.rules
 install -d %{buildroot}%{_modulesloaddir}
 echo intel-ipu6-psys > %{buildroot}%{_modulesloaddir}/ipu6-psys.conf
 
+# Filter out raw v4l2 devices (not usable) from the list of available cameras in Pipewire:
+install -p -m 0644 -D %{SOURCE2} %{buildroot}%{_datadir}/wireplumber/wireplumber.conf.d/50-ipu6-hide-raw-v4l2.conf
+
+%post
+%systemd_user_post wireplumber.service
+
+%postun
+%systemd_user_postun_with_restart wireplumber.service
+
 %files
 %license LICENSE
 %doc README.md SECURITY.md
@@ -70,8 +81,12 @@ echo intel-ipu6-psys > %{buildroot}%{_modulesloaddir}/ipu6-psys.conf
 %{_libdir}/libcamhal/
 %{_modulesloaddir}/ipu6-psys.conf
 %{_udevrulesdir}/72-ipu6-psys.rules
+%{_datadir}/wireplumber/wireplumber.conf.d/50-ipu6-hide-raw-v4l2.conf
 
 %changelog
+* Mon Jul 13 2026 Simone Caronni <negativo17@gmail.com> - 0^20260120git9899efa-17
+- Add wireplumber configuration to hide raw v4l2 devices.
+
 * Thu Jul 09 2026 Simone Caronni <negativo17@gmail.com> - 0^20260120git9899efa-16
 - Load the intel-ipu6-psys module at boot through modules-load.d.
 
